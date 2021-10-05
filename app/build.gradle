@@ -1,6 +1,38 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-android-extensions'
+    id 'signing'
+    id 'maven-publish'
+}
+
+group = 'io.github.hiroky814'
+version = '1.0.0'
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId 'com.hiroky.helloHirokyLib'
+            artifactId 'HelloHirokyLib'
+            version '0.0.1'
+
+            repositories {
+                maven {
+                    url 's3://bucket_name'
+                    credentials(AwsCredentials) {
+                        accessKey AWS_ACCESS_KEY   // put this in gradle.properties
+                        secretKey AWS_SECRET_KEY   // put this in gradle.properties
+                    }
+                }
+            }
+        }
+    }
+}
+
+signing {
+    sign publishing.publications.maven
+}
 
 android {
     compileSdkVersion 29
@@ -34,3 +66,4 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 }
+
